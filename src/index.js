@@ -1,15 +1,21 @@
 import { setGlobalState } from './globalStore';
 
-export const configureDevtool = ({ logEnabled, logFilter }) => {
-  const config = {};
-  if (logEnabled !== undefined) {
-    config.logEnabled = Boolean(logEnabled);
-  }
+const isDev = process.env.NODE_ENV === 'development';
 
-  if (typeof logFilter === 'function') {
-    config.logFilter = logFilter;
-  }
-  setGlobalState(config);
-};
+const noop = () => {};
 
-export const setLogEnabled = logEnabled => configureDevtool({ logEnabled });
+export const configureDevtool = !isDev
+  ? noop
+  : ({ logEnabled, logFilter }) => {
+      const config = {};
+      if (logEnabled !== undefined) {
+        config.logEnabled = Boolean(logEnabled);
+      }
+
+      if (typeof logFilter === 'function') {
+        config.logFilter = logFilter;
+      }
+      setGlobalState(config);
+    };
+
+export const setLogEnabled = !isDev ? noop : logEnabled => configureDevtool({ logEnabled });
