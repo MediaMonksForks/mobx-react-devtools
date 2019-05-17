@@ -1,10 +1,10 @@
 import { setGlobalState } from './globalStore';
 
-const isDev = process.env.NODE_ENV === 'development';
+const notDev = process.env.NODE_ENV !== 'development';
 
 const noop = () => {};
 
-export const configureDevtool = !isDev
+export const configureDevtool = notDev
   ? noop
   : ({ logEnabled, logFilter }) => {
       const config = {};
@@ -18,4 +18,4 @@ export const configureDevtool = !isDev
       setGlobalState(config);
     };
 
-export const setLogEnabled = !isDev ? noop : logEnabled => configureDevtool({ logEnabled });
+export const setLogEnabled = notDev ? noop : logEnabled => configureDevtool({ logEnabled });
